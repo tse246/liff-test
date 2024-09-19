@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIFF App</title>
+  <script src="https://static.line-scdn.net/liff/edge/2.1/liff.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <h1>Welcome to My LIFF App</h1>
+
+  <div>
+    <img id="lineImage" width="100px" />
+    <div id="lineName">Name</div>
+    <div id="lineId">UID: your UID</div>
+  </div>
+
+  <div>
+    <input id="lineInputMsg" type="text">
+    <button id="sendMsg" onclick="sendMsg()">Send Msg</button>
+  </div>
+
+  
+  <button id="logout" onclick="logout()">Logout</button>
+
+  <script>
+    let userId = ''
+
+    const main = async () => {
+      await liff.init({ liffId: '2006334435-m18J84Z3'})
+      if(!liff.isLoggedIn()){
+        liff.login()
+        return false
+      }
+
+      const profile = await liff.getProfile()
+      console.log(profile);
+      console.log('Already login');
+
+      lineImage.src = profile.pictureUrl
+      lineName.textContent = `Name ${profile.displayName}`
+      lineId.textContent = `UID: ${profile.userId}`
+
+      userId = profile.userId
+    }
+
+    const logout = async () => {
+      liff.logout()
+      window.location.reload()
+      console.log('logout')
+    }
+
+    const sendMsg = async () => {
+      try {
+        console.log(`send msg: ${lineInputMsg.value} : ${userId}`)
+
+        const response = await axios.post(
+          'https://1322-49-230-141-117.ngrok-free.app/send-message',
+          {
+            userId,
+            message: lineInputMsg.value
+          }
+        )
+      } catch (error) {
+        if (error.response) {
+            console.log('Response error:', error.response.data);
+        } else if (error.request) {
+            console.log('Request error:', error.request);
+        } else {
+            console.log('Error', error.message);
+        }
+      }
+    }
+
+    main()
+  </script>
+</body>
+</html>
