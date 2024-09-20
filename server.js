@@ -52,6 +52,17 @@ app.post('/send-message', async (req, res) => {
     }
 })
 
+app.post('/webhook', async (req, res) => {
+    const { events } = req.body;
+
+    if (!events || events.length === 0){
+        res.json({
+            message: 'OK'
+        })
+        return false;
+    }
+})
+
 app.listen(PORT, (req, res) => {
     console.log(`run at http://localhost:${PORT}`)
 })

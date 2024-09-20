@@ -53,15 +53,18 @@
 
     const sendMsg = async () => {
       try {
-        console.log(`send msg: ${lineInputMsg.value} : ${userId}`)
+        console.log(`try to send msg: ${lineInputMsg.value} to ${userId}`)
 
-        const response = await axios.post(
-          'https://1322-49-230-141-117.ngrok-free.app/send-message',
+        if(lineInputMsg.value === ""){
+          const response = await axios.post(
+          'https://9c85-49-230-22-187.ngrok-free.app/send-message',
           {
             userId,
             message: lineInputMsg.value
           }
         )
+        console.log(`sent msg: ${lineInputMsg.value} to ${userId}`)
+      }
       } catch (error) {
         if (error.response) {
             console.log('Response error:', error.response.data);
